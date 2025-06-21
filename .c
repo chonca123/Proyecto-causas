@@ -688,10 +688,11 @@ void modificarCarpetaMenu(void) {
 
 void buscarCarpetaMenu(void) {
     int ruc;
+    struct nodo_carpeta actual;
     printf("Ingrese el RUC de la carpeta a buscar: \n");
     scanf("%d", &ruc);
     getchar();
-    struct nodo_carpeta *actual = lista_carpetas;
+    actual = lista_carpetas;
     while(actual) {
          if(actual->carpeta->RUC == ruc) {
               printf("Carpeta encontrada:\n");
@@ -705,10 +706,13 @@ void buscarCarpetaMenu(void) {
 
 void eliminarCarpetaMenu(void) {
     int ruc;
+    struct nodo_carpeta *actual;
+    struct nodo_carpeta *anterior = NULL;
     printf("Ingrese el RUC de la carpeta a eliminar: \n");
     scanf("%d", &ruc);
     getchar();
-    struct nodo_carpeta *actual = lista_carpetas, *anterior = NULL;
+    
+    actual = lista_carpetas;
     while(actual && actual->carpeta->RUC != ruc) {
          anterior = actual;
          actual = actual->sig;
@@ -730,6 +734,7 @@ void eliminarCarpetaMenu(void) {
 
 void menuCarpetas(void) {
     char pass[20];
+    int opcion;
     printf("Ingrese la contraseña para acceder a las Carpetas Investigativas: \n");
     fgets(pass, sizeof(pass), stdin);
     pass[strcspn(pass, "\n")] = '\0';
@@ -737,7 +742,7 @@ void menuCarpetas(void) {
          printf("Contraseña incorrecta. Acceso denegado.\n");
          return;
     }
-    int opcion;
+
     do {
          printf("\n==== MENU CARPETAS ====\n");
          printf("1. Crear Carpeta\n");
@@ -810,13 +815,17 @@ void imprimir_error_agregar_imputado(char *rut) {
 
 
 struct nodo_imputado* agregar_imputado(struct nodo_imputado* raiz, char* rut, char* nombre, char* estadoProcesal, char* medidasCautelares, char* defensor) {
+    struct imputado *nuevo_imputado;
+    struct nodo_imputado* nuevo_nodo;
+    int comparacion;
+
     if (raiz == NULL) {
-        struct imputado* nuevo_imputado = crear_imputado(rut, nombre, estadoProcesal, medidasCautelares, defensor);
+        nuevo_imputado = crear_imputado(rut, nombre, estadoProcesal, medidasCautelares, defensor);
         if (nuevo_imputado == NULL) {
             imprimir_error_agregar_imputado(rut);
             return NULL;
         }
-        struct nodo_imputado* nuevo_nodo = crear_nodo_imputado(nuevo_imputado);
+        nuevo_nodo = crear_nodo_imputado(nuevo_imputado);
         if (nuevo_nodo == NULL) {
             free(nuevo_imputado);
             imprimir_error_agregar_imputado(rut);
@@ -826,7 +835,7 @@ struct nodo_imputado* agregar_imputado(struct nodo_imputado* raiz, char* rut, ch
         return nuevo_nodo;
     }
 
-    int comparacion = strcmp(rut, raiz->datos->rut);
+    comparacion = strcmp(rut, raiz->datos->rut);
 
     if (comparacion < 0) {
         raiz->izq = agregar_imputado(raiz->izq, rut, nombre, estadoProcesal, medidasCautelares, defensor);
@@ -847,12 +856,14 @@ void imprimir_busqueda_imputado_fallida(char *rut) {
 }
 
 struct nodo_imputado* buscar_imputado(struct nodo_imputado* raiz, char* rut) {
+    int comparacion;
+    
     if (raiz == NULL) {
         imprimir_busqueda_imputado_fallida(rut);
         return NULL;
     }
 
-    int comparacion = strcmp(rut, raiz->datos->rut);
+    comparacion = strcmp(rut, raiz->datos->rut);
 
     if (comparacion == 0) {
         imprimir_busqueda_imputado_exitoso(rut);
@@ -879,13 +890,17 @@ void imprimir_eliminar_imputado_exitoso(char *rut) {
 void imprimir_eliminar_imputado_fallida(char *rut) {
     printf("No se encontró un imputado con RUT: %s para eliminar.\n", rut);
 }
+
 struct nodo_imputado* eliminar_imputado(struct nodo_imputado* raiz, char* rut) {
+    int comparacion;
+    struct nodo_imputado* temp;
+    
     if (raiz == NULL) {
         imprimir_eliminar_imputado_fallida(rut);
         return raiz;
     }
 
-    int comparacion = strcmp(rut, raiz->datos->rut);
+    comparacion = strcmp(rut, raiz->datos->rut);
 
     if (comparacion < 0) {
         raiz->izq = eliminar_imputado(raiz->izq, rut);
@@ -909,7 +924,7 @@ struct nodo_imputado* eliminar_imputado(struct nodo_imputado* raiz, char* rut) {
             return temp;
         }
 
-        struct nodo_imputado* temp = encontrar_minimo(raiz->der);
+        temp = encontrar_minimo(raiz->der);
         free(raiz->datos);
         raiz->datos = (struct imputado*)malloc(sizeof(struct imputado));
         memcpy(raiz->datos, temp->datos, sizeof(struct imputado));
@@ -963,10 +978,13 @@ int modificar_imputado(struct nodo_imputado* raiz, char* rut, char* nuevo_nombre
 void modificarImputadoMenu(void) {
     char rut[15], nuevo_nombre[30], nuevo_estado[30], nuevas_medidas[50], nuevo_defensor[30];
     int opcion;
+    struct nodo_imputado *node;
+    
     printf("Ingrese RUT del imputado a modificar: ");
     fgets(rut, sizeof(rut), stdin);
     rut[strcspn(rut, "\n")] = '\0';
-    struct nodo_imputado *node = buscar_imputado(arbol_imputados, rut);
+    node = buscar_imputado(arbol_imputados, rut);
+    
     if(node == NULL)
         return;
     strcpy(nuevo_nombre, node->datos->nombre);
@@ -1095,8 +1113,9 @@ void intercambiarCausas(struct causa *a, struct causa *b) {
 }
 
 void priorizarCausas(struct causa causas[], int n) {
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = 0; j < n - i - 1; j++) {
+    int j, i;
+    for ( i = 0; i < n - 1; i++) {
+        for ( j = 0; j < n - i - 1; j++) {
             if (causas[j].urgencia < causas[j + 1].urgencia) {
                 intercambiarCausas(&causas[j], &causas[j + 1]);
             }
