@@ -227,7 +227,7 @@ void crearDenunciaMenu(void) {
     char tipo[30], desc[256];
     printf("Ingrese el RUC: \n");
     scanf("%d", &RUC);
-    getchar();
+    getchar(); //WARNING
     printf("Ingrese el tipo de denunciante: \n");
     fgets(tipo, sizeof(tipo), stdin);
     tipo[strcspn(tipo, "\n")] = '\0';
@@ -236,7 +236,7 @@ void crearDenunciaMenu(void) {
     desc[strcspn(desc, "\n")] = '\0';
     printf("Ingrese la fecha (ej. 20250608): \n");
     scanf("%d", &fecha);
-    getchar();
+    getchar(); //WARNING
 
     agregarDenuncia(&lista_denuncias, RUC, tipo, desc, fecha);
 }
@@ -245,7 +245,7 @@ void eliminarDenunciaMenu(void) {
     int RUC;
     printf("Ingrese el RUC de la denuncia a eliminar: \n");
     scanf("%d", &RUC);
-    getchar();
+    getchar(); //WARNING
     eliminarDenuncia(&lista_denuncias, RUC);
 }
 
@@ -253,7 +253,7 @@ void buscarDenunciaMenu(void) {
     int RUC;
     printf("Ingrese el RUC de la denuncia a buscar: \n");
     scanf("%d", &RUC);
-    getchar();
+    getchar(); //WARNING
     buscarDenuncia(lista_denuncias, RUC);
 }
 
@@ -265,7 +265,7 @@ void modificarDenunciaMenu(void) {
 
     printf("Ingrese el RUC de la denuncia a modificar: \n");
     scanf("%d", &RUC);
-    getchar();
+    getchar(); //WARNING
 
     denuncia = buscarDenuncia(lista_denuncias, RUC);
     if (denuncia == NULL) {
@@ -288,7 +288,7 @@ void modificarDenunciaMenu(void) {
     printf("4. Modificar todos los campos\n");
     printf("Opción: ");
     scanf("%d", &opcion);
-    getchar();
+    getchar(); //WARNING
 
     switch (opcion) {
         case 1:
@@ -304,7 +304,7 @@ void modificarDenunciaMenu(void) {
         case 3:
             printf("Ingrese la nueva fecha (ej. 20250608): \n");
             scanf("%d", &nuevaFecha);
-            getchar();
+            getchar(); //WARNING
             break;
         case 4:
             printf("Ingrese el nuevo tipo de denunciante: \n");
@@ -315,7 +315,7 @@ void modificarDenunciaMenu(void) {
             nuevaDescripcion[strcspn(nuevaDescripcion, "\n")] = '\0';
             printf("Ingrese la nueva fecha (ej. 20250608): \n");
             scanf("%d", &nuevaFecha);
-            getchar();
+            getchar(); //WARNING
             break;
         default:
             printf("OPCIÓN INVALIDA.\n");
@@ -341,7 +341,7 @@ void menu_Denuncias(void) {
         printf("0. Volver al menú principal\n");
         printf("Seleccione una opción: ");
         scanf("%d", &opcion);
-        getchar();
+        getchar(); //WARNING
         switch(opcion) {
             case 1:
                 crearDenunciaMenu();
@@ -550,7 +550,7 @@ void crearCarpetaMenu(void) {
     }
     printf("\nIngrese el RUC de la carpeta: ");
     scanf("%d", &nueva->RUC);
-    getchar();
+    getchar(); //WARNING
     printf("Ingrese los testigos: ");
     fgets(nueva->testigos, sizeof(nueva->testigos), stdin);
     nueva->testigos[strcspn(nueva->testigos, "\n")] = '\0';
@@ -586,7 +586,7 @@ void modificarCarpetaMenu(void) {
     }
     printf("Ingrese RUC de la carpeta a modificar: ");
     scanf("%d", &ruc);
-    getchar();
+    getchar(); //WARNING
 
     actual = lista_carpetas;
     
@@ -627,7 +627,7 @@ void modificarCarpetaMenu(void) {
     printf("6. Modificar todos los campos\n");
     printf("Opcion: ");
     scanf("%d", &opcion);
-    getchar();
+    getchar(); //WARNING
     switch (opcion) {
          case 1:
               printf("Ingrese nuevos testigos: \n");
@@ -691,15 +691,15 @@ void buscarCarpetaMenu(void) {
     struct nodo_carpeta actual;
     printf("Ingrese el RUC de la carpeta a buscar: \n");
     scanf("%d", &ruc);
-    getchar();
-    actual = lista_carpetas;
+    getchar(); //WARNING
+    actual = lista_carpetas; //ERROR PRINCIPAL PQ NO ENTRA LISTA CARPETA
     while(actual) {
-         if(actual->carpeta->RUC == ruc) {
+         if(actual->carpeta->RUC == ruc) { //ERROR PQ NO TIENE ACTUAL LOS DATOS DE LISTA CARPETA
               printf("Carpeta encontrada:\n");
-              imprimir_carpeta(actual->carpeta);
+              imprimir_carpeta(actual->carpeta); //ERROR NO SE PUEDE IMPRIMIR
               return;
          }
-         actual = actual->sig;
+         actual = actual->sig; //ERROR ACTUAL NO TIENE SIG
     }
     printf("No se encontró carpeta con RUC %d.\n", ruc);
 }
@@ -710,7 +710,7 @@ void eliminarCarpetaMenu(void) {
     struct nodo_carpeta *anterior = NULL;
     printf("Ingrese el RUC de la carpeta a eliminar: \n");
     scanf("%d", &ruc);
-    getchar();
+    getchar(); //WARNING
     
     actual = lista_carpetas;
     while(actual && actual->carpeta->RUC != ruc) {
@@ -752,7 +752,7 @@ void menuCarpetas(void) {
          printf("0. Volver\n");
          printf("Seleccione una opcion: ");
          scanf("%d", &opcion);
-         getchar();
+         getchar(); //WARNING
          switch(opcion) {
               case 1:
                    crearCarpetaMenu();
@@ -1004,7 +1004,7 @@ void modificarImputadoMenu(void) {
     printf("5. Modificar todos los campos\n");
     printf("Opción: ");
     scanf("%d", &opcion);
-    getchar();
+    getchar(); //WARNING
     switch(opcion) {
         case 1:
             printf("Ingrese el nuevo Nombre: \n");
@@ -1059,7 +1059,7 @@ void menuImputados(void) {
         printf("0. Volver\n");
         printf("Seleccione una opción: ");
         scanf("%d", &opcion);
-        getchar();
+        getchar(); //WARNING
         switch(opcion) {
             case 1:
                 printf("Ingrese RUT: \n");
@@ -1233,7 +1233,7 @@ void modificarCausaMenu(void) {
     char new_estado[50], current_estado[50];
     printf("Ingrese el RUC de la causa a modificar: ");
     scanf("%d", &RUC);
-    getchar();
+    getchar(); //WARNING
     struct causa *c = buscar_causa(lista_causas, RUC);
     if(c == NULL)
         return;
@@ -1249,12 +1249,12 @@ void modificarCausaMenu(void) {
     printf("3. Modificar ambos\n");
     printf("Opcion: ");
     scanf("%d", &opcion);
-    getchar();
+    getchar(); //WARNING
     switch(opcion) {
         case 1:
             printf("Ingrese la nueva urgencia: \n");
             scanf("%d", &new_urgencia);
-            getchar();
+            getchar(); //WARNING
             strncpy(new_estado, current_estado, sizeof(new_estado));
             new_estado[sizeof(new_estado)-1] = '\0';
             break;
@@ -1266,7 +1266,7 @@ void modificarCausaMenu(void) {
         case 3:
             printf("Ingrese la nueva urgencia: \n");
             scanf("%d", &new_urgencia);
-            getchar();
+            getchar(); //WARNING
             printf("Ingrese el nuevo estado: \n");
             fgets(new_estado, sizeof(new_estado), stdin);
             new_estado[strcspn(new_estado, "\n")] = '\0';
@@ -1293,11 +1293,12 @@ struct fiscal* crear_fiscal(char* nombre_fiscal, char* diligencias) {
     return nuevo;
 }
 
-struct fiscal* agregar_fiscal(char* nombre_fiscal, char* diligencias, int* resultado) {
+struct fiscal* agregar_fiscal(char* nombre_fiscal, char* diligencias) {
+    struct fiscal* nuevo_fiscal;
     if (nombre_fiscal == NULL || diligencias == NULL) {
         return NULL;
     }
-    struct fiscal* nuevo_fiscal = crear_fiscal(nombre_fiscal, diligencias);
+    nuevo_fiscal = crear_fiscal(nombre_fiscal, diligencias);
 
     if (nuevo_fiscal == NULL) {
         return NULL;
@@ -1351,14 +1352,15 @@ void eliminarFiscalEnCausa(struct causa *c) {
 }
 //MENU FISCAL
 void buscarFiscalEnCausaMenu(void) {
+    struct causa *c;
     int RUC, opcion;
     char nombre[30], diligencias[100];
 
     printf("Ingrese RUC de la causa: ");
     scanf("%d", &RUC);
-    getchar();
+    getchar(); //WARNING
 
-    struct causa *c = buscar_causa(lista_causas, RUC);
+    c = buscar_causa(lista_causas, RUC);
     if (c == NULL) {
         printf("Causa no encontrada.\n");
         return;
@@ -1493,7 +1495,7 @@ void generarEstadisticas(struct causa*lista,int total) {
     imprimirEstadisticas(abiertas,cerradas,archivadas,enJuicio,otras,total);
 }
 void menuCausas(void) {
-    int opcion, RUC, urgencia,maxCausas = 100;;
+    int opcion, RUC, urgencia, maxCausas = 100;
     char estado[30];
     do {
         printf("\n==== MENU CAUSAS ====\n");
