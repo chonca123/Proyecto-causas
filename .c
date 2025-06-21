@@ -573,9 +573,13 @@ void crearCarpetaMenu(void) {
 void modificarCarpetaMenu(void) {
     int ruc, opcion;
     char password[20];
+    struct nodo_carpeta *actual;
+    struct Carpeta *temp;
+    
     printf("Acceso restringido. Ingrese la contraseña: ");
     fgets(password, sizeof(password), stdin);
     password[strcspn(password, "\n")] = '\0';
+    
     if (strcmp(password, "admin123") != 0) {
          printf("Contraseña incorrecta. Acceso denegado.\n");
          return;
@@ -584,7 +588,8 @@ void modificarCarpetaMenu(void) {
     scanf("%d", &ruc);
     getchar();
 
-    struct nodo_carpeta *actual = lista_carpetas;
+    actual = lista_carpetas;
+    
     while(actual && actual->carpeta->RUC != ruc)
          actual = actual->sig;
     if (actual == NULL) {
@@ -592,11 +597,14 @@ void modificarCarpetaMenu(void) {
          return;
     }
 
-    struct Carpeta *temp = malloc(sizeof(struct Carpeta));
+    temp = (struct Carpeta*)malloc(sizeof(struct Carpeta));
     if (!temp) {
          printf("Error en memoria.\n");
          return;
     }
+
+    temp->RUC = actual->carpeta->RUC;
+    
     strcpy(temp->testigos, actual->carpeta->testigos);
     strcpy(temp->victimas, actual->carpeta->victimas);
     strcpy(temp->resolucion, actual->carpeta->resolucion);
