@@ -1376,7 +1376,7 @@ void buscarFiscalEnCausaMenu(void) {
         printf("2. Eliminar Fiscal\n");
         printf("0. Cancelar\n");
         scanf("%d", &opcion);
-        getchar();
+        getchar(); //WARNING
 
         switch (opcion) {
             case 1:
@@ -1393,7 +1393,7 @@ void buscarFiscalEnCausaMenu(void) {
         printf("La causa no tiene fiscal asignado.\n");
         printf("¿Desea agregar uno? (1: Si, 0: No): ");
         scanf("%d", &opcion);
-        getchar();
+        getchar(); //WARNING
 
         if (opcion == 1) {
             printf("Ingrese nombre del fiscal: ");
@@ -1404,7 +1404,7 @@ void buscarFiscalEnCausaMenu(void) {
             fgets(diligencias, sizeof(diligencias), stdin);
             diligencias[strcspn(diligencias, "\n")] = '\0';
 
-            c->fiscal = agregar_fiscal(nombre, diligencias, NULL);
+            c->fiscal = agregar_fiscal(nombre, diligencias);
             if (c->fiscal != NULL) {
                 printf("Fiscal agregado exitosamente.\n");
             } else {
@@ -1508,15 +1508,15 @@ void menuCausas(void) {
         printf("0. Volver\n");
         printf("Seleccione una opcion: ");
         scanf("%d", &opcion);
-        getchar();
+        getchar(); //WARNING
         switch(opcion) {
             case 1:
                 printf("Ingrese RUC: \n");
                 scanf("%d", &RUC);
-                getchar();
+                getchar(); //WARNING
                 printf("Ingrese urgencia(vital [1],urgencia inmediata[2],urgencia[3],evidente[4],no urgente[5]) : \n");
                 scanf("%d", &urgencia);
-                getchar();
+                getchar(); //WARNING
                 printf("Ingrese estado de la causa (abierta,cerrada,archivada,en juicio,otra): \n");
                 fgets(estado, sizeof(estado), stdin);
                 estado[strcspn(estado, "\n")] = '\0';
@@ -1525,16 +1525,16 @@ void menuCausas(void) {
             case 2:
                 printf("Ingrese RUC a buscar: \n");
                 scanf("%d", &RUC);
-                getchar();
+                getchar(); //WARNING
                 buscar_causa(lista_causas, RUC);
                 break;
             case 3:
                 printf("Ingrese RUC de la causa a modificar: \n");
                 scanf("%d", &RUC);
-                getchar();
+                getchar(); //WARNING
                 printf("Ingrese nueva urgencia: \n");
                 scanf("%d", &urgencia);
-                getchar();
+                getchar(); //WARNING
                 printf("Ingrese nuevo estado: \n");
                 fgets(estado, sizeof(estado), stdin);
                 estado[strcspn(estado, "\n")] = '\0';
@@ -1543,14 +1543,14 @@ void menuCausas(void) {
             case 4:
                 printf("Ingrese RUC de la causa a eliminar: \n");
                 scanf("%d", &RUC);
-                getchar();
+                getchar(); //WARNING
                 eliminar_causa(&lista_causas, RUC);
                 break;
             case 5:
                 buscarFiscalEnCausaMenu();
                 break;
             case 6:
-                generarEstadisticas(&lista_causas,maxCausas);
+                generarEstadisticas(&lista_causas,maxCausas); //WARNING
                 break;
             case 0:
                 printf("Volviendo...\n");
@@ -1579,7 +1579,7 @@ int main() {
             printf("No se ingreso una opcion valida. Terminando el programa.\n");
             break;
         }
-        getchar();
+        getchar(); //WARNING
 
         switch(opcion) {
             case 1:
