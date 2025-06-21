@@ -503,11 +503,22 @@ int modificarCarpeta(struct nodo_carpeta *lista, struct Carpeta *nueva) {
 
     while (actual) {
         if (actual->carpeta->RUC == nueva->RUC) {
-            strcpy(actual->carpeta->testigos, nueva->testigos);
-            strcpy(actual->carpeta->victimas, nueva->victimas);
-            strcpy(actual->carpeta->resolucion, nueva->resolucion);
-            strcpy(actual->carpeta->declaraciones, nueva->declaraciones);
-            strcpy(actual->carpeta->pruebas, nueva->pruebas);
+            
+            if (nueva->testigos && actual->carpeta->testigos) {
+                strcpy(actual->carpeta->testigos, nueva->testigos);
+            }
+            if (nueva->victimas && actual->carpeta->victimas) {
+                strcpy(actual->carpeta->victimas, nueva->victimas);
+            }
+            if (nueva->resolucion && actual->carpeta->resolucion) {
+                strcpy(actual->carpeta->resolucion, nueva->resolucion);
+            }
+            if (nueva->declaraciones && actual->carpeta->declaraciones) {
+                strcpy(actual->carpeta->declaraciones, nueva->declaraciones);
+            }
+            if (nueva->pruebas && actual->carpeta->pruebas) {
+                strcpy(actual->carpeta->pruebas, nueva->pruebas);
+            }
 
             imprimir_modificacion_exitosa_carpeta(nueva->RUC, nueva->testigos, nueva->victimas, nueva->resolucion, nueva->declaraciones, nueva->pruebas);
             return 1;
