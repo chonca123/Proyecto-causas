@@ -1229,12 +1229,13 @@ void eliminar_causa(struct causa **lista, int RUC) {
 
 //MENU CAUSA
 void modificarCausaMenu(void) {
+    struct causa *c = buscar_causa;
     int RUC, opcion, new_urgencia;
     char new_estado[50], current_estado[50];
     printf("Ingrese el RUC de la causa a modificar: ");
     scanf("%d", &RUC);
     getchar(); //WARNING
-    struct causa *c = buscar_causa(lista_causas, RUC);
+    c = buscar_causa(lista_causas, RUC);
     if(c == NULL)
         return;
     new_urgencia = c->urgencia;
@@ -1293,7 +1294,7 @@ struct fiscal* crear_fiscal(char* nombre_fiscal, char* diligencias) {
     return nuevo;
 }
 
-struct fiscal* agregar_fiscal(char* nombre_fiscal, char* diligencias) {
+struct fiscal* agregar_fiscal(char* nombre_fiscal, char* diligencias) { //ERROR POR PARAMETRO
     struct fiscal* nuevo_fiscal;
     if (nombre_fiscal == NULL || diligencias == NULL) {
         return NULL;
@@ -1404,7 +1405,7 @@ void buscarFiscalEnCausaMenu(void) {
             fgets(diligencias, sizeof(diligencias), stdin);
             diligencias[strcspn(diligencias, "\n")] = '\0';
 
-            c->fiscal = agregar_fiscal(nombre, diligencias);
+            c->fiscal = agregar_fiscal(nombre, diligencias, NULL); //ERROR POR PARAMETRO
             if (c->fiscal != NULL) {
                 printf("Fiscal agregado exitosamente.\n");
             } else {
