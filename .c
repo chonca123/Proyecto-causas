@@ -379,22 +379,28 @@ void imprimir_error_Carpeta(int RUC) {
 int agregarCarpeta(struct nodo_carpeta **lista, struct Carpeta *nueva) {
     struct nodo_carpeta *nuevoNodo;
     struct nodo_carpeta *actual;
-   
+    nuevoNodo = (struct nodo_carpeta *)malloc(sizeof(struct nodo_carpeta));
+    int ruc_error;
+
     if (!lista || !nueva) {
-        imprimir_error_Carpeta(nueva ? nueva->RUC : -1);
+        if (nueva)
+            ruc_error = nueva->RUC;
+        else
+            ruc_error = -1;
+
+        imprimir_error_Carpeta(ruc_error);
         return -1;
     }
-    
-    nuevoNodo = (struct nodo_carpeta *)malloc(sizeof(struct nodo_carpeta));
+
     if (!nuevoNodo) {
         imprimir_error_Carpeta(nueva->RUC);
         return -1;
     }
-    
+
     nuevoNodo->carpeta = nueva;
     nuevoNodo->sig = NULL;
     nuevoNodo->ant = NULL;
-    
+
     if (*lista == NULL) {
         *lista = nuevoNodo;
     } else {
@@ -409,7 +415,6 @@ int agregarCarpeta(struct nodo_carpeta **lista, struct Carpeta *nueva) {
     imprimir_nueva_Carpeta(nueva->RUC);
     return 0;
 }
-
 void imprimir_busqueda_carpeta(int RUC) {
     printf("Se encontró la carpeta con RUC: %d.\n", RUC);
 }
@@ -439,15 +444,21 @@ void imprimir_carpeta_fallo(int RUC) {
 }
 
 void eliminarCarpeta(struct nodo_carpeta **lista, struct Carpeta *carpeta_eliminada) {
-    struct nodo_carpeta*actual;
+    struct nodo_carpeta *actual;
     int RUC;
-    
+    actual = *lista;
+    int ruc_error;
     if (*lista == NULL || carpeta_eliminada == NULL) {
-        imprimir_carpeta_fallo(carpeta_eliminada ? carpeta_eliminada->RUC : -1);
+
+        if (carpeta_eliminada)
+            ruc_error = carpeta_eliminada->RUC;
+        else
+            ruc_error = -1;
+
+        imprimir_carpeta_fallo(ruc_error);
         return;
     }
-    
-    actual = *lista;
+
     while (actual) {
         if (actual->carpeta == carpeta_eliminada) {
             RUC = actual->carpeta->RUC;
@@ -461,10 +472,11 @@ void eliminarCarpeta(struct nodo_carpeta **lista, struct Carpeta *carpeta_elimin
             if (actual->sig) {
                 actual->sig->ant = actual->ant;
             }
-            if (actual ->carpeta->imputados) {
+
+            if (actual->carpeta->imputados) {
                 free(actual->carpeta->imputados);
             }
-            
+
             free(actual->carpeta);
             free(actual);
 
@@ -491,11 +503,16 @@ void imprimir_modificacion_exitosa_carpeta(int RUC, const char *testigo, const c
 }
 
 int modificarCarpeta(struct nodo_carpeta *lista, struct Carpeta *nueva) {
-    
-    struct nodo_carpeta*actual;
-    
+    struct nodo_carpeta *actual;
+    int ruc_error;
+
     if (!lista || !nueva) {
-        imprimir_modificacion_fallida_carpeta(nueva ? nueva->RUC : -1);
+        if (nueva)
+            ruc_error = nueva->RUC;
+        else
+            ruc_error = -1;
+
+        imprimir_modificacion_fallida_carpeta(ruc_error);
         return -1;
     }
 
@@ -503,7 +520,6 @@ int modificarCarpeta(struct nodo_carpeta *lista, struct Carpeta *nueva) {
 
     while (actual) {
         if (actual->carpeta->RUC == nueva->RUC) {
-            
             if (nueva->testigos && actual->carpeta->testigos) {
                 strcpy(actual->carpeta->testigos, nueva->testigos);
             }
@@ -520,9 +536,18 @@ int modificarCarpeta(struct nodo_carpeta *lista, struct Carpeta *nueva) {
                 strcpy(actual->carpeta->pruebas, nueva->pruebas);
             }
 
-            imprimir_modificacion_exitosa_carpeta(nueva->RUC, nueva->testigos, nueva->victimas, nueva->resolucion, nueva->declaraciones, nueva->pruebas);
+            imprimir_modificacion_exitosa_carpeta(
+                nueva->RUC,
+                nueva->testigos,
+                nueva->victimas,
+                nueva->resolucion,
+                nueva->declaraciones,
+                nueva->pruebas
+            );
+
             return 1;
         }
+
         actual = actual->sig;
     }
 
