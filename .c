@@ -597,52 +597,53 @@ void crearCarpetaMenu(void) {
 
 void modificarCarpetaMenu(void) {
     int ruc, opcion;
-    char password[20];
+    char contraseña[20];
     struct nodo_carpeta *actual;
     struct Carpeta *temp;
     
     printf("Acceso restringido. Ingrese la contraseña: ");
-    fgets(password, sizeof(password), stdin);
-    password[strcspn(password, "\n")] = '\0';
+    fgets(contraseña, sizeof(contraseña), stdin);
+    contraseña[strcspn(contraseña, "\n")] = '\0';
     
-    if (strcmp(password, "admin123") != 0) {
+    if (strcmp(contraseña, "admin123") != 0) {
          printf("Contraseña incorrecta. Acceso denegado.\n");
          return;
     }
+    
     printf("Ingrese RUC de la carpeta a modificar: ");
     scanf("%d", &ruc);
-    getchar(); //WARNING
-
-    actual = lista_carpetas;
+    getchar();
     
-    while(actual && actual->carpeta->RUC != ruc)
+    actual = lista_carpetas;
+    while (actual != NULL && actual->carpeta->RUC != ruc) {
          actual = actual->sig;
+    }
+    
     if (actual == NULL) {
          printf("Carpeta no encontrada.\n");
          return;
     }
-
+    
     temp = (struct Carpeta*)malloc(sizeof(struct Carpeta));
-    if (!temp) {
+    if (temp == NULL) {
          printf("Error en memoria.\n");
          return;
     }
-
-    temp->RUC = actual->carpeta->RUC;
     
+    temp->RUC = actual->carpeta->RUC;
     strcpy(temp->testigos, actual->carpeta->testigos);
     strcpy(temp->victimas, actual->carpeta->victimas);
     strcpy(temp->resolucion, actual->carpeta->resolucion);
     strcpy(temp->declaraciones, actual->carpeta->declaraciones);
     strcpy(temp->pruebas, actual->carpeta->pruebas);
-
+    
     printf("\nValores actuales:\n");
     printf("Testigos: %s\n", temp->testigos);
     printf("Victimas: %s\n", temp->victimas);
     printf("Resolucion: %s\n", temp->resolucion);
     printf("Declaraciones: %s\n", temp->declaraciones);
     printf("Pruebas: %s\n", temp->pruebas);
-
+    
     printf("\nSeleccione el campo a modificar:\n");
     printf("1. Modificar solo testigos\n");
     printf("2. Modificar solo victimas\n");
@@ -652,61 +653,63 @@ void modificarCarpetaMenu(void) {
     printf("6. Modificar todos los campos\n");
     printf("Opcion: ");
     scanf("%d", &opcion);
-    getchar(); //WARNING
+    getchar();
+    
     switch (opcion) {
          case 1:
-              printf("Ingrese nuevos testigos: \n");
+              printf("Ingrese nuevos testigos: ");
               fgets(temp->testigos, sizeof(temp->testigos), stdin);
               temp->testigos[strcspn(temp->testigos, "\n")] = '\0';
               break;
          case 2:
-              printf("Ingrese nuevas victimas: \n");
+              printf("Ingrese nuevas victimas: ");
               fgets(temp->victimas, sizeof(temp->victimas), stdin);
               temp->victimas[strcspn(temp->victimas, "\n")] = '\0';
               break;
          case 3:
-              printf("Ingrese nueva resolucion: \n");
+              printf("Ingrese nueva resolucion: ");
               fgets(temp->resolucion, sizeof(temp->resolucion), stdin);
               temp->resolucion[strcspn(temp->resolucion, "\n")] = '\0';
               break;
          case 4:
-              printf("Ingrese nuevas declaraciones: \n");
+              printf("Ingrese nuevas declaraciones: ");
               fgets(temp->declaraciones, sizeof(temp->declaraciones), stdin);
               temp->declaraciones[strcspn(temp->declaraciones, "\n")] = '\0';
               break;
          case 5:
-              printf("Ingrese nuevas pruebas: \n");
+              printf("Ingrese nuevas pruebas: ");
               fgets(temp->pruebas, sizeof(temp->pruebas), stdin);
               temp->pruebas[strcspn(temp->pruebas, "\n")] = '\0';
               break;
          case 6:
-              printf("Ingrese nuevos testigos: \n");
+              printf("Ingrese nuevos testigos: ");
               fgets(temp->testigos, sizeof(temp->testigos), stdin);
               temp->testigos[strcspn(temp->testigos, "\n")] = '\0';
-              printf("Ingrese nuevas victimas: \n");
+              printf("Ingrese nuevas victimas: ");
               fgets(temp->victimas, sizeof(temp->victimas), stdin);
               temp->victimas[strcspn(temp->victimas, "\n")] = '\0';
-              printf("Ingrese nueva resolucion: \n");
+              printf("Ingrese nueva resolucion: ");
               fgets(temp->resolucion, sizeof(temp->resolucion), stdin);
               temp->resolucion[strcspn(temp->resolucion, "\n")] = '\0';
-              printf("Ingrese nuevas declaraciones: \n");
+              printf("Ingrese nuevas declaraciones: ");
               fgets(temp->declaraciones, sizeof(temp->declaraciones), stdin);
               temp->declaraciones[strcspn(temp->declaraciones, "\n")] = '\0';
-              printf("Ingrese nuevas pruebas: \n");
+              printf("Ingrese nuevas pruebas: ");
               fgets(temp->pruebas, sizeof(temp->pruebas), stdin);
               temp->pruebas[strcspn(temp->pruebas, "\n")] = '\0';
               break;
          default:
-              printf("OPCIÓN INVALIDA\n");
+              printf("OPCION INVALIDA. Operacion cancelada.\n");
               free(temp);
               return;
     }
-
+    
     strcpy(actual->carpeta->testigos, temp->testigos);
     strcpy(actual->carpeta->victimas, temp->victimas);
     strcpy(actual->carpeta->resolucion, temp->resolucion);
     strcpy(actual->carpeta->declaraciones, temp->declaraciones);
     strcpy(actual->carpeta->pruebas, temp->pruebas);
+    
     printf("Carpeta modificada exitosamente.\n");
     free(temp);
 }
