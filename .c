@@ -379,28 +379,22 @@ void imprimir_error_Carpeta(int RUC) {
 int agregarCarpeta(struct nodo_carpeta **lista, struct Carpeta *nueva) {
     struct nodo_carpeta *nuevoNodo;
     struct nodo_carpeta *actual;
-    nuevoNodo = (struct nodo_carpeta *)malloc(sizeof(struct nodo_carpeta));
-    int ruc_error;
-
+   
     if (!lista || !nueva) {
-        if (nueva)
-            ruc_error = nueva->RUC;
-        else
-            ruc_error = -1;
-
-        imprimir_error_Carpeta(ruc_error);
+        imprimir_error_Carpeta(nueva ? nueva->RUC : -1);
         return -1;
     }
-
+    
+    nuevoNodo = (struct nodo_carpeta *)malloc(sizeof(struct nodo_carpeta));
     if (!nuevoNodo) {
         imprimir_error_Carpeta(nueva->RUC);
         return -1;
     }
-
+    
     nuevoNodo->carpeta = nueva;
     nuevoNodo->sig = NULL;
     nuevoNodo->ant = NULL;
-
+    
     if (*lista == NULL) {
         *lista = nuevoNodo;
     } else {
@@ -415,6 +409,7 @@ int agregarCarpeta(struct nodo_carpeta **lista, struct Carpeta *nueva) {
     imprimir_nueva_Carpeta(nueva->RUC);
     return 0;
 }
+
 void imprimir_busqueda_carpeta(int RUC) {
     printf("Se encontró la carpeta con RUC: %d.\n", RUC);
 }
@@ -444,21 +439,15 @@ void imprimir_carpeta_fallo(int RUC) {
 }
 
 void eliminarCarpeta(struct nodo_carpeta **lista, struct Carpeta *carpeta_eliminada) {
-    struct nodo_carpeta *actual;
+    struct nodo_carpeta*actual;
     int RUC;
-    actual = *lista;
-    int ruc_error;
+    
     if (*lista == NULL || carpeta_eliminada == NULL) {
-
-        if (carpeta_eliminada)
-            ruc_error = carpeta_eliminada->RUC;
-        else
-            ruc_error = -1;
-
-        imprimir_carpeta_fallo(ruc_error);
+        imprimir_carpeta_fallo(carpeta_eliminada ? carpeta_eliminada->RUC : -1);
         return;
     }
-
+    
+    actual = *lista;
     while (actual) {
         if (actual->carpeta == carpeta_eliminada) {
             RUC = actual->carpeta->RUC;
@@ -472,11 +461,10 @@ void eliminarCarpeta(struct nodo_carpeta **lista, struct Carpeta *carpeta_elimin
             if (actual->sig) {
                 actual->sig->ant = actual->ant;
             }
-
-            if (actual->carpeta->imputados) {
+            if (actual ->carpeta->imputados) {
                 free(actual->carpeta->imputados);
             }
-
+            
             free(actual->carpeta);
             free(actual);
 
@@ -503,16 +491,11 @@ void imprimir_modificacion_exitosa_carpeta(int RUC, const char *testigo, const c
 }
 
 int modificarCarpeta(struct nodo_carpeta *lista, struct Carpeta *nueva) {
-    struct nodo_carpeta *actual;
-    int ruc_error;
-
+    
+    struct nodo_carpeta*actual;
+    
     if (!lista || !nueva) {
-        if (nueva)
-            ruc_error = nueva->RUC;
-        else
-            ruc_error = -1;
-
-        imprimir_modificacion_fallida_carpeta(ruc_error);
+        imprimir_modificacion_fallida_carpeta(nueva ? nueva->RUC : -1);
         return -1;
     }
 
@@ -520,6 +503,7 @@ int modificarCarpeta(struct nodo_carpeta *lista, struct Carpeta *nueva) {
 
     while (actual) {
         if (actual->carpeta->RUC == nueva->RUC) {
+            
             if (nueva->testigos && actual->carpeta->testigos) {
                 strcpy(actual->carpeta->testigos, nueva->testigos);
             }
@@ -536,18 +520,9 @@ int modificarCarpeta(struct nodo_carpeta *lista, struct Carpeta *nueva) {
                 strcpy(actual->carpeta->pruebas, nueva->pruebas);
             }
 
-            imprimir_modificacion_exitosa_carpeta(
-                nueva->RUC,
-                nueva->testigos,
-                nueva->victimas,
-                nueva->resolucion,
-                nueva->declaraciones,
-                nueva->pruebas
-            );
-
+            imprimir_modificacion_exitosa_carpeta(nueva->RUC, nueva->testigos, nueva->victimas, nueva->resolucion, nueva->declaraciones, nueva->pruebas);
             return 1;
         }
-
         actual = actual->sig;
     }
 
@@ -597,53 +572,52 @@ void crearCarpetaMenu(void) {
 
 void modificarCarpetaMenu(void) {
     int ruc, opcion;
-    char contraseña[20];
+    char password[20];
     struct nodo_carpeta *actual;
     struct Carpeta *temp;
     
     printf("Acceso restringido. Ingrese la contraseña: ");
-    fgets(contraseña, sizeof(contraseña), stdin);
-    contraseña[strcspn(contraseña, "\n")] = '\0';
+    fgets(password, sizeof(password), stdin);
+    password[strcspn(password, "\n")] = '\0';
     
-    if (strcmp(contraseña, "admin123") != 0) {
+    if (strcmp(password, "admin123") != 0) {
          printf("Contraseña incorrecta. Acceso denegado.\n");
          return;
     }
-    
     printf("Ingrese RUC de la carpeta a modificar: ");
     scanf("%d", &ruc);
-    getchar();
-    
+    getchar(); //WARNING
+
     actual = lista_carpetas;
-    while (actual != NULL && actual->carpeta->RUC != ruc) {
-         actual = actual->sig;
-    }
     
+    while(actual && actual->carpeta->RUC != ruc)
+         actual = actual->sig;
     if (actual == NULL) {
          printf("Carpeta no encontrada.\n");
          return;
     }
-    
+
     temp = (struct Carpeta*)malloc(sizeof(struct Carpeta));
-    if (temp == NULL) {
+    if (!temp) {
          printf("Error en memoria.\n");
          return;
     }
-    
+
     temp->RUC = actual->carpeta->RUC;
+    
     strcpy(temp->testigos, actual->carpeta->testigos);
     strcpy(temp->victimas, actual->carpeta->victimas);
     strcpy(temp->resolucion, actual->carpeta->resolucion);
     strcpy(temp->declaraciones, actual->carpeta->declaraciones);
     strcpy(temp->pruebas, actual->carpeta->pruebas);
-    
+
     printf("\nValores actuales:\n");
     printf("Testigos: %s\n", temp->testigos);
     printf("Victimas: %s\n", temp->victimas);
     printf("Resolucion: %s\n", temp->resolucion);
     printf("Declaraciones: %s\n", temp->declaraciones);
     printf("Pruebas: %s\n", temp->pruebas);
-    
+
     printf("\nSeleccione el campo a modificar:\n");
     printf("1. Modificar solo testigos\n");
     printf("2. Modificar solo victimas\n");
@@ -653,63 +627,61 @@ void modificarCarpetaMenu(void) {
     printf("6. Modificar todos los campos\n");
     printf("Opcion: ");
     scanf("%d", &opcion);
-    getchar();
-    
+    getchar(); //WARNING
     switch (opcion) {
          case 1:
-              printf("Ingrese nuevos testigos: ");
+              printf("Ingrese nuevos testigos: \n");
               fgets(temp->testigos, sizeof(temp->testigos), stdin);
               temp->testigos[strcspn(temp->testigos, "\n")] = '\0';
               break;
          case 2:
-              printf("Ingrese nuevas victimas: ");
+              printf("Ingrese nuevas victimas: \n");
               fgets(temp->victimas, sizeof(temp->victimas), stdin);
               temp->victimas[strcspn(temp->victimas, "\n")] = '\0';
               break;
          case 3:
-              printf("Ingrese nueva resolucion: ");
+              printf("Ingrese nueva resolucion: \n");
               fgets(temp->resolucion, sizeof(temp->resolucion), stdin);
               temp->resolucion[strcspn(temp->resolucion, "\n")] = '\0';
               break;
          case 4:
-              printf("Ingrese nuevas declaraciones: ");
+              printf("Ingrese nuevas declaraciones: \n");
               fgets(temp->declaraciones, sizeof(temp->declaraciones), stdin);
               temp->declaraciones[strcspn(temp->declaraciones, "\n")] = '\0';
               break;
          case 5:
-              printf("Ingrese nuevas pruebas: ");
+              printf("Ingrese nuevas pruebas: \n");
               fgets(temp->pruebas, sizeof(temp->pruebas), stdin);
               temp->pruebas[strcspn(temp->pruebas, "\n")] = '\0';
               break;
          case 6:
-              printf("Ingrese nuevos testigos: ");
+              printf("Ingrese nuevos testigos: \n");
               fgets(temp->testigos, sizeof(temp->testigos), stdin);
               temp->testigos[strcspn(temp->testigos, "\n")] = '\0';
-              printf("Ingrese nuevas victimas: ");
+              printf("Ingrese nuevas victimas: \n");
               fgets(temp->victimas, sizeof(temp->victimas), stdin);
               temp->victimas[strcspn(temp->victimas, "\n")] = '\0';
-              printf("Ingrese nueva resolucion: ");
+              printf("Ingrese nueva resolucion: \n");
               fgets(temp->resolucion, sizeof(temp->resolucion), stdin);
               temp->resolucion[strcspn(temp->resolucion, "\n")] = '\0';
-              printf("Ingrese nuevas declaraciones: ");
+              printf("Ingrese nuevas declaraciones: \n");
               fgets(temp->declaraciones, sizeof(temp->declaraciones), stdin);
               temp->declaraciones[strcspn(temp->declaraciones, "\n")] = '\0';
-              printf("Ingrese nuevas pruebas: ");
+              printf("Ingrese nuevas pruebas: \n");
               fgets(temp->pruebas, sizeof(temp->pruebas), stdin);
               temp->pruebas[strcspn(temp->pruebas, "\n")] = '\0';
               break;
          default:
-              printf("OPCION INVALIDA. Operacion cancelada.\n");
+              printf("OPCIÓN INVALIDA\n");
               free(temp);
               return;
     }
-    
+
     strcpy(actual->carpeta->testigos, temp->testigos);
     strcpy(actual->carpeta->victimas, temp->victimas);
     strcpy(actual->carpeta->resolucion, temp->resolucion);
     strcpy(actual->carpeta->declaraciones, temp->declaraciones);
     strcpy(actual->carpeta->pruebas, temp->pruebas);
-    
     printf("Carpeta modificada exitosamente.\n");
     free(temp);
 }
@@ -1633,3 +1605,5 @@ int main() {
 
     return 0;
 }
+
+   
