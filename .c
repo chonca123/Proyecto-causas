@@ -1046,7 +1046,7 @@ void modificarImputadoMenu(void) {
     printf("5. Modificar todos los campos\n");
     printf("Opción: ");
     scanf("%d", &opcion);
-    getchar(); //WARNING
+    getchar(); 
     switch(opcion) {
         case 1:
             printf("Ingrese el nuevo Nombre: \n");
