@@ -750,6 +750,27 @@ void eliminarCarpetaMenu(void) {
     printf("Carpeta eliminada exitosamente.\n");
 }
 
+void mostrar_carpetas(struct nodo_carpeta *lista)
+{
+    if (lista == NULL) {
+        printf("\nNo hay carpetas registradas.\n");
+        return;
+    }
+
+    printf("\n--- LISTADO DE CARPETAS ---\n");
+    while (lista != NULL) {
+        printf("RUC: %d\n", lista->carpeta->RUC);
+        printf("Testigos: %s\n", lista->carpeta->testigos);
+        printf("Víctimas: %s\n", lista->carpeta->victimas);
+        printf("Resolución: %s\n", lista->carpeta->resolucion);
+        printf("Declaraciones: %s\n", lista->carpeta->declaraciones);
+        printf("Pruebas: %s\n", lista->carpeta->pruebas);
+        printf("---------------------------\n");
+        lista = lista->sig;
+    }
+
+}
+
 void menuCarpetas(void) {
     char pass[20];
     int opcion;
@@ -767,6 +788,7 @@ void menuCarpetas(void) {
          printf("2. Modificar Carpeta\n");
          printf("3. Buscar Carpeta\n");
          printf("4. Eliminar Carpeta\n");
+         printf("5. Listar Carpetas\n");
          printf("0. Volver\n");
          printf("Seleccione una opcion: ");
          scanf("%d", &opcion);
@@ -784,6 +806,8 @@ void menuCarpetas(void) {
               case 4:
                    eliminarCarpetaMenu();
                    break;
+              case 5:
+                   mostrar_carpetas(mostrar_carpetas); 
               case 0:
                    printf("Volviendo al menu principal...\n");
                    break;
