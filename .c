@@ -692,11 +692,11 @@ void buscarCarpetaMenu(void) {
     printf("Ingrese el RUC de la carpeta a buscar: \n");
     scanf("%d", &ruc);
     getchar(); //WARNING
-    actual = lista_carpetas; //ERROR PRINCIPAL PQ NO ENTRA LISTA CARPETA
+    actual  = lista_carpetas; //ERROR PRINCIPAL PQ NO ENTRA LISTA CARPETA
     while(actual != NULL) {
-         if(actual->carpeta.RUC == ruc) { //ERROR PQ NO TIENE ACTUAL LOS DATOS DE LISTA CARPETA
+         if(actual->carpeta->RUC == ruc) { //ERROR PQ NO TIENE ACTUAL LOS DATOS DE LISTA CARPETA
               printf("Carpeta encontrada:\n");
-              imprimir_carpeta(&(actual->carpeta)); //ERROR NO SE PUEDE IMPRIMIR
+              imprimir_carpeta(actual->carpeta); //ERROR NO SE PUEDE IMPRIMIR
               return;
          }
          actual = actual->sig; //ERROR ACTUAL NO TIENE SIG
