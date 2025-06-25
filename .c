@@ -688,15 +688,15 @@ void modificarCarpetaMenu(void) {
 
 void buscarCarpetaMenu(void) {
     int ruc;
-    struct nodo_carpeta actual;
+    struct nodo_carpeta *actual;
     printf("Ingrese el RUC de la carpeta a buscar: \n");
     scanf("%d", &ruc);
     getchar(); //WARNING
     actual = lista_carpetas; //ERROR PRINCIPAL PQ NO ENTRA LISTA CARPETA
-    while(actual) {
-         if(actual->carpeta->RUC == ruc) { //ERROR PQ NO TIENE ACTUAL LOS DATOS DE LISTA CARPETA
+    while(actual != NULL) {
+         if(actual->carpeta.RUC == ruc) { //ERROR PQ NO TIENE ACTUAL LOS DATOS DE LISTA CARPETA
               printf("Carpeta encontrada:\n");
-              imprimir_carpeta(actual->carpeta); //ERROR NO SE PUEDE IMPRIMIR
+              imprimir_carpeta(&(actual->carpeta)); //ERROR NO SE PUEDE IMPRIMIR
               return;
          }
          actual = actual->sig; //ERROR ACTUAL NO TIENE SIG
