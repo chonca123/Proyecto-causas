@@ -380,10 +380,15 @@ int agregarCarpeta(struct nodo_carpeta **lista, struct Carpeta *nueva) {
     struct nodo_carpeta *nuevoNodo;
     struct nodo_carpeta *actual;
    
-    if (!lista || !nueva) {
-        imprimir_error_Carpeta(nueva ? nueva->RUC : -1);
+    if (lista == NULL || nueva == NULL) {
+        if (nueva != NULL) {
+            imprimir_error_Carpeta(nueva->RUC);
+        } else {
+            imprimir_error_Carpeta(-1);
+        }
         return -1;
     }
+
     
     nuevoNodo = (struct nodo_carpeta *)malloc(sizeof(struct nodo_carpeta));
     if (!nuevoNodo) {
@@ -441,9 +446,16 @@ void imprimir_carpeta_fallo(int RUC) {
 void eliminarCarpeta(struct nodo_carpeta **lista, struct Carpeta *carpeta_eliminada) {
     struct nodo_carpeta*actual;
     int RUC;
+    int ruc_error;
     
-    if (*lista == NULL || carpeta_eliminada == NULL) {
-        imprimir_carpeta_fallo(carpeta_eliminada ? carpeta_eliminada->RUC : -1);
+        if (*lista == NULL || carpeta_eliminada == NULL) {
+            if (carpeta_eliminada != NULL) {
+                ruc_error = carpeta_eliminada->RUC;
+            } else {
+                ruc_error = -1;
+        }
+
+        imprimir_carpeta_fallo(ruc_error);
         return;
     }
     
@@ -493,9 +505,15 @@ void imprimir_modificacion_exitosa_carpeta(int RUC, const char *testigo, const c
 int modificarCarpeta(struct nodo_carpeta *lista, struct Carpeta *nueva) {
     
     struct nodo_carpeta*actual;
-    
-    if (!lista || !nueva) {
-        imprimir_modificacion_fallida_carpeta(nueva ? nueva->RUC : -1);
+    int ruc_error;
+    if (lista == NULL || nueva == NULL) {
+        if (nueva != NULL) {
+            ruc_error = nueva->RUC;
+        } else {
+            ruc_error = -1;
+        }
+
+        imprimir_modificacion_fallida_carpeta(ruc_error);
         return -1;
     }
 
