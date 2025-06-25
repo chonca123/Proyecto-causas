@@ -1131,8 +1131,9 @@ void imprimir_error_agregar_causa(int RUC) {
 }
 
 struct causa* agregar_causa(struct causa **lista, int RUC, int urgencia, const char *estado_causa) {
+    int maxCausas;
     struct causa *nueva_causa = (struct causa*)malloc(sizeof(struct causa));
-    int maxCausas = 100;
+    maxCausas = 100;
     if (!nueva_causa) {
         imprimir_error_agregar_causa(RUC);
         return NULL;
@@ -1405,7 +1406,7 @@ void buscarFiscalEnCausaMenu(void) {
             fgets(diligencias, sizeof(diligencias), stdin);
             diligencias[strcspn(diligencias, "\n")] = '\0';
 
-            c->fiscal = agregar_fiscal(nombre, diligencias, NULL); //ERROR POR PARAMETRO
+            c->fiscal = agregar_fiscal(nombre, diligencias); //ERROR POR PARAMETRO
             if (c->fiscal != NULL) {
                 printf("Fiscal agregado exitosamente.\n");
             } else {
